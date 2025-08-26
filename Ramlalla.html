@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ram Lalla Developers — Building Better Cities</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Mobile Navigation Styles */
+    .mobile-nav-header {
+      background: linear-gradient(180deg, #F7F3EE, #F0E6D8);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      position: relative;
+      z-index: 1000;
+    }
+
+    .hamburger-menu {
+      width: 30px;
+      height: 24px;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger-line {
+      width: 100%;
+      height: 3px;
+      background-color: #92400e;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+      transform-origin: center;
+    }
+
+    .hamburger-menu.active .hamburger-line:nth-child(1) {
+      transform: translateY(10.5px) rotate(45deg);
+    }
+
+    .hamburger-menu.active .hamburger-line:nth-child(2) {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+
+    .hamburger-menu.active .hamburger-line:nth-child(3) {
+      transform: translateY(-10.5px) rotate(-45deg);
+    }
+
+    .mobile-nav-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 998;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-nav-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-nav-menu {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 280px;
+      height: 100vh;
+      background: linear-gradient(180deg, #F7F3EE, #F0E6D8);
+      z-index: 999;
+      transition: left 0.3s ease;
+      overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+
+    .mobile-nav-menu.active {
+      left: 0;
+    }
+
+    .mobile-nav-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #92400e;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .kmc-item {
+      display: block;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      color: #1f2937;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .kmc-item:hover {
+      background: rgba(198,156,109,0.08);
+    }
+
+    /* Desktop sidebar styles */
+    @media(min-width:1024px) {
+      main { margin: 0 260px; }
+      nav.left, nav.right {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        width: 260px;
+        overflow: auto;
+        background: linear-gradient(180deg,#F7F3EE, #F0E6D8);
+      }
+      nav.left { left: 0; border-right: 1px solid rgba(0,0,0,0.06); }
+      nav.right { right: 0; border-left: 1px solid rgba(0,0,0,0.06); }
+    }
+
+    @media(max-width:1023px) {
+      nav.left, nav.right { display: none; }
+      main { margin: 0; }
+    }
+
+    /* Other styles */
+    .hero {
+      height: clamp(320px, 45vh, 520px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+    }
+    
+    .slides {
+      display: flex;
+      height: 100%;
+      width: 300%;
+      transition: transform 0.8s cubic-bezier(.2,.8,.2,1);
+    }
+    
+    .slide {
+      flex: 0 0 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    
+    .hero-overlay {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      text-align: left;
+      color: #1f2937;
+      width: 90%;
+      max-width: 600px;
+    }
+    
+    .logo-badge {
+      position: absolute;
+      left: clamp(12px, 3vw, 24px);
+      top: clamp(12px, 3vw, 18px);
+      background: linear-gradient(90deg,#fff,rgba(255,255,255,0.6));
+      padding: clamp(6px, 2vw, 8px);
+      border-radius: 8px;
+      box-shadow: 0 6px 18px rgba(31,41,55,0.08);
+      display: flex;
+      align-items: center;
+    }
+
+    .marq {
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+    }
+    
+    .marq .inner {
+      display: inline-block;
+      padding-right: 50%;
+      animation: scroll 30s linear infinite;
+    }
+    
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* Enhanced Google Translate Styles */
+    .translate-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .translate-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(217, 119, 6, 0.3);
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 13px;
+      color: #92400e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .translate-btn:hover {
+      background: white;
+      box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+    }
+    
+    .translate-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 8px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      padding: 12px;
+      width: 280px;
+      max-height: 400px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .translate-dropdown.show {
+      display: block;
+      animation: fadeInTranslate 0.2s ease;
+    }
+    
+    .translate-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 14px;
+    }
+    
+    .translate-option:hover {
+      background: #fef7eb;
+    }
+    
+    .translate-option.active {
+      background: #f59e0b;
+      color: white;
+    }
+    
+    .translate-flag {
+      width: 24px;
+      height: 18px;
+      border-radius: 2px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    
+    @keyframes fadeInTranslate {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hide Google Translate default elements */
+    .goog-te-banner-frame,
+    .goog-te-menu-frame {
+      display: none !important;
+    }
+    
+    .goog-te-combo {
+      display: none !important;
+    }
+    
+    body {
+      top: 0 !important;
+    }
+    
+    #google_translate_element {
+      display: none !important;
+    }
+
+    /* Responsive translate dropdown */
+    @media (max-width: 640px) {
+      .translate-dropdown {
+        width: 260px;
+        right: -20px;
+      }
+    }
+  </style>
+</head>
+<body class="font-sans text-gray-900 bg-gray-50">
+
+  <!-- Top utility strip -->
+  <div class="w-full bg-gradient-to-r from-amber-50 to-amber-100 border-b">
+    <div class="max-w-7xl mx-auto px-4 flex items-center justify-between py-2 text-sm">
+      <div class="flex items-center gap-3">
+        <a href="#notices" class="text-amber-700 font-semibold">Notices</a>
+        <a href="#tenders" class="text-amber-700">Tenders</a>
+        <a href="#careers" class="text-amber-700">Careers</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="translate-wrapper">
+          <button class="translate-btn" id="translateToggle">
+            <i class="fas fa-language"></i>
+            <span>Language</span>
+            <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
+          </button>
+          <div class="translate-dropdown" id="translateDropdown">
+            <div class="translate-option" data-lang="en">
+              <img src="https://flagcdn.com/w40/gb.png" class="translate-flag" alt="English">
+              <span>English</span>
+            </div>
+            <div class="translate-option" data-lang="hi">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Hindi">
+              <span>हिंदी (Hindi)</span>
+            </div>
+            <div class="translate-option" data-lang="bn">
+              <img src="https://flagcdn.com/w40/bd.png" class="translate-flag" alt="Bengali">
+              <span>বাংলা (Bengali)</span>
+            </div>
+            <div class="translate-option" data-lang="te">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Telugu">
+              <span>తెలుగు (Telugu)</span>
+            </div>
+            <div class="translate-option" data-lang="mr">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Marathi">
+              <span>मराठी (Marathi)</span>
+            </div>
+            <div class="translate-option" data-lang="ta">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Tamil">
+              <span>தமிழ் (Tamil)</span>
+            </div>
+            <div class="translate-option" data-lang="ur">
+              <img src="https://flagcdn.com/w40/pk.png" class="translate-flag" alt="Urdu">
+              <span>اردو (Urdu)</span>
+            </div>
+            <div class="translate-option" data-lang="gu">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Gujarati">
+              <span>ગુજરાતી (Gujarati)</span>
+            </div>
+            <div class="translate-option" data-lang="kn">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Kannada">
+              <span>ಕನ್ನಡ (Kannada)</span>
+            </div>
+            <div class="translate-option" data-lang="ml">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Malayalam">
+              <span>മലയാളം (Malayalam)</span>
+            </div>
+            <div class="translate-option" data-lang="or">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Odia">
+              <span>ଓଡ଼ିଆ (Odia)</span>
+            </div>
+            <div class="translate-option" data-lang="pa">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Punjabi">
+              <span>ਪੰਜਾਬੀ (Punjabi)</span>
+            </div>
+            <div class="translate-option" data-lang="as">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Assamese">
+              <span>অসমীয়া (Assamese)</span>
+            </div>
+            <div class="translate-option" data-lang="mai">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Maithili">
+              <span>मैथिली (Maithili)</span>
+            </div>
+            <div class="translate-option" data-lang="sa">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Sanskrit">
+              <span>संस्कृत (Sanskrit)</span>
+            </div>
+            <div class="translate-option" data-lang="ne">
+              <img src="https://flagcdn.com/w40/np.png" class="translate-flag" alt="Nepali">
+              <span>नेपाली (Nepali)</span>
+            </div>
+            <div class="translate-option" data-lang="sd">
+              <img src="https://flagcdn.com/w40/pk.png" class="translate-flag" alt="Sindhi">
+              <span>سنڌي (Sindhi)</span>
+            </div>
+            <div class="translate-option" data-lang="ks">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Kashmiri">
+              <span>کٲشُر (Kashmiri)</span>
+            </div>
+            <div class="translate-option" data-lang="sat">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Santali">
+              <span>ᱥᱟᱱᱛᱟᱲᱤ (Santali)</span>
+            </div>
+            <div class="translate-option" data-lang="kok">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Konkani">
+              <span>कोंकणी (Konkani)</span>
+            </div>
+            <div class="translate-option" data-lang="doi">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Dogri">
+              <span>डोगरी (Dogri)</span>
+            </div>
+            <div class="translate-option" data-lang="mni">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Manipuri">
+              <span>ꯃꯤꯇꯩ (Manipuri)</span>
+            </div>
+            <div class="translate-option" data-lang="bho">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Bhojpuri">
+              <span>भोजपुरी (Bhojpuri)</span>
+            </div>
+            <div class="translate-option" data-lang="brx">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Bodo">
+              <span>बर' (Bodo)</span>
+            </div>
+            <div class="translate-option" data-lang="lus">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Mizo">
+              <span>Mizo ṭawng (Mizo)</span>
+            </div>
+            <div class="translate-option" data-lang="mjz">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Majhi">
+              <span>Majhi (Majhi)</span>
+            </div>
+          </div>
+        </div>
+        <div id="google_translate_element" class="hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Header -->
+  <div class="lg:hidden mobile-nav-header">
+    <div class="flex items-center justify-between p-4">
+      <div class="flex items-center gap-3">
+        <img src="lotus_transparent.png" alt="Ram Lalla Logo" class="w-10 h-10 rounded"/>
+        <div>
+          <div class="font-semibold text-base">Ram Lalla Developers</div>
+          <div class="text-xs text-gray-600">Building Better Cities</div>
+        </div>
+      </div>
+      
+      <button class="hamburger-menu" id="mobileMenuToggle" aria-label="Toggle Navigation">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Overlay -->
+  <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+
+  <!-- Mobile Navigation Menu -->
+  <div class="mobile-nav-menu" id="mobileNavMenu">
+    <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close Navigation">
+      <i class="fas fa-times"></i>
+    </button>
+    
+    <div class="px-4 pt-16 pb-4">
+      <div class="flex items-center gap-3 mb-6">
+        <img src="lotus_transparent.png" alt="Ram Lalla Logo" class="w-12 h-12 rounded"/>
+        <div>
+          <div class="font-semibold text-lg">Ram Lalla Developers</div>
+          <div class="text-xs text-gray-600">Building Better Cities</div>
+        </div>
+      </div>
+    </div>
+    
+    <nav>
+      <a class="kmc-item" href="about.html">About Us</a>
+      <a class="kmc-item" href="#departments">Departments</a>
+      <a class="kmc-item" href="#contact">Contact</a>
+      <a class="kmc-item" href="#services">Core Services</a>
+      <a class="kmc-item" href="#projects">Projects</a>
+      <a class="kmc-item" href="#notices">Notices</a>
+      <a class="kmc-item" href="#tenders">Tender Notices</a>
+      <a class="kmc-item" href="#careers">Careers</a>
+      <a class="kmc-item" href="#grievance">Grievance</a>
+      <a class="kmc-item" href="#e-services">Online Services</a>
+      <a class="kmc-item" href="#parking">Parking</a>
+      <a class="kmc-item" href="#dashboard">Employee Dashboard</a>
+    </nav>
+  </div>
+
+  <!-- Left sidebar (Desktop only) -->
+  <nav class="left hidden lg:block">
+    <div class="px-4 pt-6 pb-4">
+      <div class="flex items-center gap-3">
+        <img src="lotus_transparent.png" alt="Ram Lalla Logo" class="w-12 h-12 rounded"/>
+        <div>
+          <div class="font-semibold text-lg">Ram Lalla Developers</div>
+          <div class="text-xs text-gray-600">Building Better Cities</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-6">
+      <a class="kmc-item" href="about.html">About Us</a>
+      <a class="kmc-item" href="#departments">Departments</a>
+      <a class="kmc-item" href="#contact">Contact</a>
+      <a class="kmc-item" href="#services">Core Services</a>
+      <a class="kmc-item" href="#projects">Projects</a>
+      <a class="kmc-item" href="#notices">Notices</a>
+      <a class="kmc-item" href="#tenders">Tender Notices</a>
+      <a class="kmc-item" href="#careers">Careers</a>
+      <a class="kmc-item" href="#grievance">Grievance</a>
+      <a class="kmc-item" href="#e-services">Online Services</a>
+      <a class="kmc-item" href="#parking">Parking</a>
+      <a class="kmc-item" href="#dashboard">Employee Dashboard</a>
+    </div>
+  </nav>
+
+  <!-- Right sidebar (Desktop only) -->
+  <nav class="right hidden lg:block">
+    <div class="px-4 pt-6 pb-4">
+      <div class="bg-white rounded-lg p-4 shadow-lg text-center">
+        <img src="https://placehold.co/112x112" alt="CEO" class="mx-auto w-28 h-28 rounded-lg object-cover border"/>
+        <div class="font-semibold mt-3">Chief Engineer</div>
+        <div class="text-sm text-gray-600">Ram Lalla Developers</div>
+      </div>
+      <div class="mt-6 bg-white rounded-lg p-3">
+        <div class="font-semibold text-sm mb-2">Quick Links</div>
+        <ul class="text-sm space-y-2">
+          <li><a href="#projects" class="text-amber-700 hover:underline">Featured Projects</a></li>
+          <li><a href="#about" class="text-amber-700 hover:underline">About Company</a></li>
+          <li><a href="#services" class="text-amber-700 hover:underline">Services</a></li>
+          <li><a href="#careers" class="text-amber-700 hover:underline">Careers</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="relative">
+    <!-- Hero section -->
+    <section class="hero">
+      <div class="slides" id="slides">
+        <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1541976590-713941681591?q=80&w=1200&auto=format&fit=crop')"></div>
+        <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1200&auto=format&fit=crop')"></div>
+        <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=1200&auto=format&fit=crop')"></div>
+      </div>
+
+      <div class="logo-badge">
+        <img src="lotus_transparent.png" alt="logo" class="w-10 h-10 lg:w-12 lg:h-12"/>
+        <div class="ml-2 lg:ml-3">
+          <div class="font-semibold text-sm lg:text-base">Ram Lalla Developers</div>
+          <div class="text-xs text-gray-600 hidden lg:block">Civic Infrastructure & Urban Projects</div>
+        </div>
+      </div>
+
+      <div class="hero-overlay p-4 lg:p-6 bg-white/80 rounded-lg backdrop-blur-sm shadow-lg">
+        <h1 class="font-bold text-2xl lg:text-3xl">Building for the Nation</h1>
+        <p class="mt-2 lg:mt-3 text-xs lg:text-sm text-gray-700">We partner with government bodies and communities to deliver safe, durable and sustainable infrastructure. Explore our projects, services.</p>
+        <div class="mt-3 lg:mt-4 flex flex-wrap gap-2 lg:gap-3">
+          <a href="#projects" class="px-3 py-1.5 lg:px-4 lg:py-2 text-sm lg:text-base rounded-md bg-amber-500 text-white font-semibold">View Projects</a>
+          <a href="#contact" class="px-3 py-1.5 lg:px-4 lg:py-2 text-sm lg:text-base rounded-md border border-amber-200 text-amber-700">Contact Us</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Marquee Notices -->
+    <section class="bg-white border-t border-b">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
+        <span class="inline-flex items-center gap-2 rounded-full bg-amber-100 text-amber-900 px-2 py-1 text-xs lg:text-sm font-semibold">Notice</span>
+        <div class="marq w-full">
+          <div class="inner text-sm lg:text-base">
+            <a href="#" class="mr-6 lg:mr-10">RFP: Community Hall Redevelopment — Phase II</a>
+            <a href="#" class="mr-6 lg:mr-10">Tender: Urban Drainage Network Mapping</a>
+            <a href="#" class="mr-6 lg:mr-10">Announcement: Public Consultation — Riverside Park</a>
+            <a href="#" class="mr-6 lg:mr-10">Awarded: Neighbourhood Park Project</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main content area -->
+    <section class="max-w-6xl mx-auto px-4 py-8 lg:py-10">
+      <div class="grid lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white rounded-lg p-4 lg:p-6 shadow-lg">
+          <h2 class="font-bold text-xl lg:text-2xl">About Ram Lalla Developers</h2>
+          <p class="mt-2 lg:mt-3 text-xs lg:text-sm text-gray-700">Ram Lalla Developers is committed to delivering professional infrastructure, housing and urban projects that help the nation grow. We follow clear procurement, compliance and environmental guidelines to ensure value and transparency.</p>
+
+          <h3 class="mt-4 lg:mt-6 font-semibold">Featured Projects</h3>
+          <div class="grid md:grid-cols-2 gap-3 lg:gap-4 mt-2 lg:mt-3">
+            <article class="rounded-lg overflow-hidden border">
+              <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200&auto=format&fit=crop" alt="project" class="w-full h-32 lg:h-40 object-cover"/>
+              <div class="p-3 lg:p-4">
+                <div class="font-semibold text-sm lg:text-base">Riverside Housing Phase I</div>
+                <div class="text-xs lg:text-sm text-gray-600 mt-1">G+12 residential towers with landscaped podium.</div>
+              </div>
+            </article>
+            <article class="rounded-lg overflow-hidden border">
+              <img src="https://images.unsplash.com/photo-1482192505345-5655af888cc4?q=80&w=1200&auto=format&fit=crop" alt="project" class="w-full h-32 lg:h-40 object-cover"/>
+              <div class="p-3 lg:p-4">
+                <div class="font-semibold text-sm lg:text-base">Urban Street & Drainage</div>
+                <div class="text-xs lg:text-sm text-gray-600 mt-1">Complete street with utility ducting & LED lighting.</div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <aside class="bg-white rounded-lg p-4 lg:p-6 shadow-lg">
+          <h4 class="font-semibold">Quick Links</h4>
+          <ul class="text-xs lg:text-sm mt-2 lg:mt-3 space-y-1 lg:space-y-2 text-amber-700">
+            <li><a href="#notices" class="block py-1">Notices</a></li>
+            <li><a href="#tenders" class="block py-1">Tenders</a></li>
+            <li><a href="#careers" class="block py-1">Careers</a></li>
+            <li><a href="#grievance" class="block py-1">Grievance</a></li>
+          </ul>
+
+          <div class="mt-4 lg:mt-6">
+            <h4 class="font-semibold">Contact</h4>
+            <div class="text-xs lg:text-sm text-gray-600 mt-1 lg:mt-2">Kolkata, West Bengal</div>
+            <a class="block mt-1 lg:mt-2 text-amber-700 text-xs lg:text-sm" href="mailto:info@ramlalladevelopers.com">info@ramlalladevelopers.com</a>
+            <a class="block mt-1 text-amber-700 text-xs lg:text-sm" href="tel:+919999999999">+91 99999 99999</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Stats strip -->
+    <section class="bg-amber-700 text-white">
+      <div class="max-w-6xl mx-auto px-4 py-6 lg:py-8 grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6 text-center">
+        <div><div class="text-xl lg:text-2xl font-bold">10+ yrs</div><div class="text-white/90 text-xs lg:text-sm">Experience</div></div>
+        <div><div class="text-xl lg:text-2xl font-bold">120+</div><div class="text-white/90 text-xs lg:text-sm">Projects</div></div>
+        <div><div class="text-xl lg:text-2xl font-bold">30+</div><div class="text-white/90 text-xs lg:text-sm">Municipal Works</div></div>
+        <div><div class="text-xl lg:text-2xl font-bold">100%</div><div class="text-white/90 text-xs lg:text-sm">Safety compliant</div></div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-amber-100 text-gray-900 mt-6 border-t">
+      <div class="max-w-6xl mx-auto px-4 py-8 lg:py-10 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="md:col-span-2 lg:col-span-1">
+          <div class="font-bold text-lg">Ram Lalla Developers</div>
+          <p class="text-xs lg:text-sm text-gray-600 mt-2 lg:mt-3">Professional urban & infrastructure solutions for a resilient nation.</p>
+        </div>
+        <div>
+          <div class="font-semibold mb-2 text-sm lg:text-base">Quick Links</div>
+          <ul class="space-y-1 lg:space-y-2 text-xs lg:text-sm text-gray-700">
+            <li><a href="#services">Services</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="font-semibold mb-2 text-sm lg:text-base">Resources</div>
+          <ul class="space-y-1 lg:space-y-2 text-xs lg:text-sm text-gray-700">
+            <li><a href="#notices">Notices</a></li>
+            <li><a href="#tenders">Tenders</a></li>
+            <li><a href="#careers">Careers</a></li>
+            <li><a href="#grievance">Grievance</a></li>
+          </ul>
+        </div>
+        <div class="md:col-span-2 lg:col-span-1">
+          <p class="text-xs text-gray-600 mt-3 lg:mt-4">
+            © <span id="year">2024</span> Ram Lalla Developers. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+
+//Simple carousel
+    (function(){
+      const slides = document.getElementById('slides');
+      const total = slides.children.length;
+      let idx = 0;
+      setInterval(() => {
+        idx = (idx + 1) % total;
+        slides.style.transform = `translateX(-${idx * 100}%)`;
+      }, 5000);
+    })();
+
+    // Mobile navigation
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+      const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+      const mobileNavMenu = document.getElementById('mobileNavMenu');
+      const mobileNavClose = document.getElementById('mobileNavClose');
+
+      function openMobileMenu() {
+        mobileMenuToggle.classList.add('active');
+        mobileNavOverlay.classList.add('active');
+        mobileNavMenu.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileMenu() {
+        mobileMenuToggle.classList.remove('active');
+        mobileNavOverlay.classList.remove('active');
+        mobileNavMenu.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      mobileMenuToggle.addEventListener('click', openMobileMenu);
+      mobileNavClose.addEventListener('click', closeMobileMenu);
+      mobileNavOverlay.addEventListener('click', closeMobileMenu);
+
+      // Close menu when clicking on navigation links
+      const navLinks = mobileNavMenu.querySelectorAll('.kmc-item');
+      navLinks.forEach(link => {
+        link.addEventListener('click', closeMobileMenu);
+      });
+    });
+
+    // Set year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Google Translate integration with 26 Indian languages
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,hi,bn,te,mr,ta,ur,gu,kn,ml,or,pa,as,mai,sa,ne,sd,ks,sat,kok,doi,mni,bho,brx,lus',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false,
+        multilanguagePage: true
+      }, 'google_translate_element');
+    }
+
+    // Load Google Translate script
+    (function() {
+      var gtScript = document.createElement('script');
+      gtScript.type = 'text/javascript';
+      gtScript.async = true;
+      gtScript.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      document.head.appendChild(gtScript);
+    })();
+
+    // Enhanced translate functionality
+    setTimeout(function() {
+      const translateToggle = document.getElementById('translateToggle');
+      const translateDropdown = document.getElementById('translateDropdown');
+      let currentLang = 'en';
+      
+      if (translateToggle && translateDropdown) {
+        // Toggle dropdown
+        translateToggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          translateDropdown.classList.toggle('show');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!translateToggle.contains(e.target) && !translateDropdown.contains(e.target)) {
+            translateDropdown.classList.remove('show');
+          }
+        });
+        
+        // Handle language selection
+        const translateOptions = document.querySelectorAll('.translate-option');
+        translateOptions.forEach(option => {
+          option.addEventListener('click', function(e) {
+            e.preventDefault();
+            const lang = this.getAttribute('data-lang');
+            const langName = this.querySelector('span').textContent;
+            
+            // Remove active class from all options
+            translateOptions.forEach(opt => opt.classList.remove('active'));
+            
+            // Add active class to selected option
+            this.classList.add('active');
+            
+            // Update button text
+            const buttonSpan = translateToggle.querySelector('span');
+            if (buttonSpan) {
+              buttonSpan.textContent = langName.split('(')[0].trim();
+            }
+            
+            if (lang === 'en') {
+              // Reset to English
+              window.location.hash = '';
+              if (window.location.hash) {
+                window.location.reload();
+              }
+            } else {
+              // Trigger Google Translate using URL hash method
+              window.location.hash = '#googtrans(en|' + lang + ')';
+              window.location.reload();
+            }
+            
+            currentLang = lang;
+            
+            // Close dropdown
+            translateDropdown.classList.remove('show');
+          });
+        });
+
+        // Set initial active language
+        if (translateOptions.length > 0) {
+          translateOptions[0].classList.add('active');
+        }
+      }
+    }, 1000);
+  </script>
+
+</body>
+</html>

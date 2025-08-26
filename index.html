@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ram Lalla Developers | Loading</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --gold: #d4af37;
+      --gold-dark: #b08d2c;
+      --dark-bg: #213637;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--dark-bg);
+      color: var(--gold);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .splash-container {
+      text-align: center;
+      width: 90%;
+      max-width: 480px;
+      padding: 20px;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Logo */
+    .logo-container {
+      width: 30vw;
+      max-width: 140px;
+      margin: 0 auto 1.2rem;
+      animation: fadeInUp 1.2s ease forwards;
+    }
+
+    .logo-img {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5));
+    }
+
+    @keyframes fadeInUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Company Name - Subheading */
+    .company-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.0rem, 2.0vw, 1.0rem);
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      letter-spacing: 1.5px;
+      line-height: 1.4;
+    }
+
+    .company-name span {
+      opacity: 0;
+      display: inline-block;
+      transform: translateY(20px);
+      animation: fadeLetter 1s forwards;
+    }
+
+    @keyframes fadeLetter {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .space {
+      display: inline-block;
+      width: 0.4em;
+    }
+
+    /* Tagline */
+    .tagline {
+      font-size: clamp(0.55rem, 2vw, 0.2rem);
+      color: #e1e1e1;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeIn 1.5s ease forwards;
+      animation-delay: 2.4s;
+    }
+
+    /* Loading bar */
+    .loading-container {
+      width: 80%;
+      max-width: 300px;
+      margin: 0 auto;
+      opacity: 0;
+      animation: fadeIn 1.5s ease forwards;
+      animation-delay: 3s;
+    }
+
+    .loading-bar {
+      height: 6px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .loading-progress {
+      height: 100%;
+      width: 0%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+      animation: loading 3s ease-in-out forwards;
+      animation-delay: 3.2s;
+    }
+
+    @keyframes loading {
+      from { width: 0%; }
+      to { width: 100%; }
+    }
+
+    .loading-text {
+      font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 500;
+      color: #ccc;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 480px) {
+      .logo-container {
+        width: 35vw;
+        max-width: 100px;
+      }
+
+      .tagline {
+        margin-bottom: 1.5rem;
+      }
+
+      .loading-bar {
+        height: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="splash-container">
+    <!-- Logo -->
+    <div class="logo-container">
+      <img src="lotus_transparent.png" alt="Lotus Logo" class="logo-img" />
+    </div>
+
+    <!-- Company Name -->
+    <h2 class="company-name" id="companyName"></h2>
+
+    <!-- Tagline -->
+    <p class="tagline">An Initiation Towards the Development of Nation</p>
+
+    <!-- Loading bar -->
+    <div class="loading-container">
+      <div class="loading-bar">
+        <div class="loading-progress"></div>
+      </div>
+      <p class="loading-text">Loading...</p>
+    </div>
+  </div>
+
+  <script>
+    // Animate each letter with delay
+    const companyName = "RAM LALLA DEVELOPERS";
+    const container = document.getElementById("companyName");
+
+    companyName.split("").forEach((letter, index) => {
+      if (letter === " ") {
+        const space = document.createElement("span");
+        space.className = "space";
+        container.appendChild(space);
+      } else {
+        const span = document.createElement("span");
+        span.textContent = letter;
+        span.style.animationDelay = `${index * 0.08 + 1.2}s`;
+        container.appendChild(span);
+      }
+    });
+// Redirect after animation
+    setTimeout(() => {
+      window.location.href = "Ramlalla.html";
+    }, 4500);
+    
+  </script>
+</body>
+</html>

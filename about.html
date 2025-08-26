@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About Us - Ram Lalla Developers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            beige: {
+              DEFAULT: '#E9DEC9',
+              50: '#FBF8F6',
+              100: '#F7F2EA',
+              200: '#EFE2C9',
+              300: '#E6D2A8',
+              500: '#D1B77E',
+              700: '#A6864F'
+            },
+            gold: '#C69C6D',
+            ink: '#1f2937',
+            paper: '#ffffff'
+          },
+          boxShadow: {
+            soft: '0 10px 30px rgba(31,41,55,0.06)',
+          },
+          fontFamily: {
+            sans: ['Inter','ui-sans-serif','system-ui','sans-serif'],
+            display: ['Playfair Display','serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Layout helpers */
+    :root{--sidebar-w:260px;}
+    body{background:linear-gradient(180deg,#fff, #F8F4EE);}
+    .focus-ring{outline:none;box-shadow:0 0 0 3px rgba(198,156,109,0.18);}
+    .container-px{padding-left:clamp(1rem,3vw,2rem);padding-right:clamp(1rem,3vw,2rem);} 
+
+    /* Left & Right fixed sidebars (desktop) */
+    @media(min-width:1024px){
+      main{margin:0 var(--sidebar-w);} /* reserve space for both sidebars */
+      nav.left, nav.right{position:fixed;top:0;bottom:0;width:var(--sidebar-w);overflow:auto;background:linear-gradient(180deg,#F7F3EE, #F0E6D8);}
+      nav.left{left:0;border-right:1px solid rgba(0,0,0,0.06);}
+      nav.right{right:0;border-left:1px solid rgba(0,0,0,0.06);}
+    }
+
+    /* Mobile: sidebars become top stacked panels */
+    @media(max-width:1023px){
+      nav.left, nav.right{position:static;width:auto;border:none;background:transparent}
+      main{margin:0}
+    }
+
+    /* KMC-style left menu items */
+    .kmc-item{display:block;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.05);color:var(--ink);font-weight:600}
+    .kmc-item small{display:block;font-weight:400;color:#6b7280}
+
+    /* Content sections */
+    .content-section {
+      display: none;
+      animation: fadeIn 0.5s ease forwards;
+    }
+    
+    .content-section.active {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Mobile menu improvements */
+    .mobile-menu details {
+      list-style: none;
+      cursor: pointer;
+    }
+    .mobile-menu details::-webkit-details-marker {
+      display: none;
+    }
+
+    /* Enhanced Google Translate */
+    .translate-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .translate-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(198, 156, 109, 0.3);
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 13px;
+      color: #7c2d12;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .translate-btn:hover {
+      background: white;
+      box-shadow: 0 0 0 3px rgba(198, 156, 109, 0.15);
+    }
+    
+    .translate-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 8px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      padding: 12px;
+      width: 200px;
+      z-index: 100;
+      display: none;
+    }
+    
+    .translate-dropdown.show {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+    
+    .translate-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .translate-option:hover {
+      background: #fef7eb;
+    }
+    
+    .translate-flag {
+      width: 24px;
+      height: 18px;
+      border-radius: 2px;
+      object-fit: cover;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Google Translate customization */
+    .goog-te-banner-frame {
+      display: none !important;
+    }
+    
+    .goog-te-menu-value {
+      display: none !important;
+    }
+    
+    .goog-te-gadget {
+      color: transparent !important;
+    }
+    
+    .goog-te-gadget .goog-te-combo {
+      margin: 0 !important;
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    
+    #google_translate_element {
+      display: inline-block;
+    }
+    
+    .skiptranslate iframe {
+      display: none !important;
+    }
+    
+    body {
+      top: 0 !important;
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+      .stats-strip div {
+        padding: 12px 0;
+      }
+      
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .utility-strip {
+        flex-direction: column;
+        gap: 8px;
+        padding: 8px 0;
+      }
+      
+      .utility-links {
+        justify-content: center;
+      }
+      
+      .translate-wrapper {
+        align-self: center;
+      }
+    }
+  </style>
+</head>
+<body class="font-sans text-ink">
+
+  <!-- Top utility strip (mobile & desktop) -->
+  <div class="w-full bg-gradient-to-r from-beige-100 to-beige-200 border-b lg:ml-0 lg:mr-0">
+    <div class="max-w-7xl mx-auto container-px flex items-center justify-between py-2 text-sm utility-strip">
+      <div class="flex items-center gap-3 utility-links">
+        <a href="#notices" class="text-amber-700 font-semibold">Notices</a>
+        <a href="#tenders" class="text-amber-700">Tenders</a>
+        <a href="#careers" class="text-amber-700">Careers</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="translate-wrapper">
+          <button class="translate-btn" id="translateToggle">
+            <i class="fas fa-language"></i>
+            <span>Language</span>
+            <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
+          </button>
+          <div class="translate-dropdown" id="translateDropdown">
+            <div class="translate-option" data-lang="en">
+              <img src="https://flagcdn.com/w40/gb.png" class="translate-flag" alt="English">
+              <span>English</span>
+            </div>
+            <div class="translate-option" data-lang="hi">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Hindi">
+              <span>Hindi</span>
+            </div>
+            <div class="translate-option" data-lang="bn">
+              <img src="https://flagcdn.com/w40/bd.png" class="translate-flag" alt="Bengali">
+              <span>Bengali</span>
+            </div>
+            <div class="translate-option" data-lang="te">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Telugu">
+              <span>Telugu</span>
+            </div>
+            <div class="translate-option" data-lang="ta">
+              <img src="https://flagcdn.com/w40/in.png" class="translate-flag" alt="Tamil">
+              <span>Tamil</span>
+            </div>
+          </div>
+        </div>
+        <div id="google_translate_element"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu button -->
+  <div class="lg:hidden container-px py-3 bg-beige-100">
+    <details class="mobile-menu">
+      <summary class="font-semibold flex items-center justify-between p-3 bg-white rounded-lg shadow-soft">
+        <span>Menu</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+        </svg>
+      </summary>
+      <nav class="mt-2 bg-white rounded-lg p-3 shadow-soft">
+        <a class="kmc-item nav-link" href="#company" data-target="company">About the Company</a>
+        <a class="kmc-item nav-link" href="#vastu" data-target="vastu">About Vastu Compliance</a>
+        <a class="kmc-item nav-link" href="#design" data-target="design">About Modern Design</a>
+        <a class="kmc-item nav-link" href="#heritage" data-target="heritage">About Heritage Touch</a>
+        <a class="kmc-item nav-link" href="#delivery" data-target="delivery">About Timely Delivery</a>
+        <a class="kmc-item nav-link" href="#legal" data-target="legal">About Legal Clarity</a>
+        <a class="kmc-item nav-link" href="#choose" data-target="choose">Why Choose Us</a>
+        <a class="kmc-item nav-link" href="#quality" data-target="quality">About Quality Assurance</a>
+      </nav>
+    </details>
+  </div>
+
+  <!-- Left sidebar (KMC-like) - Desktop only -->
+  <nav class="left hidden lg:block">
+    <div class="px-4 pt-6 pb-4">
+      <div class="flex items-center gap-3">
+        <!-- Logo replaced with JPG image -->
+        <div class="w-12 h-12 rounded-full bg-beige-500 flex items-center justify-center overflow-hidden">
+          <img src="https://placehold.co/48x48/e9dec9/1f2937?text=RLD" alt="Ram Lalla Developers Logo" class="w-full h-full object-cover">
+        </div>
+        <div>
+          <div class="font-display text-lg">Ram Lalla Developers</div>
+          <div class="text-xs text-slate-600">Building Better Cities</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-6">
+      <a class="kmc-item nav-link" href="#company" data-target="company">About the Company</a>
+      <a class="kmc-item nav-link" href="#vastu" data-target="vastu">About Vastu Compliance</a>
+      <a class="kmc-item nav-link" href="#design" data-target="design">About Modern Design</a>
+      <a class="kmc-item nav-link" href="#heritage" data-target="heritage">About Heritage Touch</a>
+      <a class="kmc-item nav-link" href="#delivery" data-target="delivery">About Timely Delivery</a>
+      <a class="kmc-item nav-link" href="#legal" data-target="legal">About Legal Clarity</a>
+      <a class="kmc-item nav-link" href="#choose" data-target="choose">Why Choose Us</a>
+      <a class="kmc-item nav-link" href="#quality" data-target="quality">About Quality Assurance</a>
+    </div>
+  </nav>
+
+  <!-- Right sidebar (KMC-like quick links / leader) - Desktop only -->
+  <nav class="right hidden lg:block">
+    <div class="px-4 pt-6 pb-4">
+      <div class="bg-white rounded-lg p-4 shadow-soft text-center">
+        <div class="mx-auto w-28 h-28 rounded-full bg-beige-200 flex items-center justify-center overflow-hidden">
+          <img src="https://placehold.co/112x112/e9dec9/1f2937?text=CE" alt="Chief Engineer" class="w-full h-full object-cover">
+        </div>
+        <div class="font-semibold mt-3">Chief Engineer</div>
+        <div class="text-sm text-slate-600">Ram Lalla Developers</div>
+      </div>
+      <div class="mt-6 bg-white rounded-lg p-3">
+        <div class="font-semibold text-sm mb-2">Quick Links</div>
+        <ul class="text-sm space-y-2">
+          <li><a href="#company" class="text-amber-700 hover:underline nav-link" data-target="company">About Company</a></li>
+          <li><a href="#choose" class="text-amber-700 hover:underline nav-link" data-target="choose">Why Choose Us</a></li>
+          <li><a href="#quality" class="text-amber-700 hover:underline nav-link" data-target="quality">Quality Assurance</a></li>
+          <li><a href="#contact" class="text-amber-700 hover:underline">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="relative">
+    <!-- Header -->
+    <section class="bg-beige-100 border-b">
+      <div class="max-w-6xl mx-auto container-px py-6">
+        <h1 class="font-display text-3xl text-ink">About Ram Lalla Developers</h1>
+        <p class="mt-2 text-slate-600">Professional urban & infrastructure solutions for a resilient nation.</p>
+      </div>
+    </section>
+
+    <!-- Content sections -->
+    <section class="max-w-6xl mx-auto container-px py-8">
+      <!-- Company Section -->
+      <div id="company" class="content-section active">
+        <div class="bg-white rounded-lg p-6 shadow-soft mb-6">
+          <h2 class="font-display text-2xl text-ink border-b-2 border-gold pb-2 inline-block">About the Company</h2>
+          <p class="mt-4 text-slate-700">Ram Lalla Developers Private Limited is a visionary company committed to contributing toward the development of the nation. With a focus on sustainable and innovative construction practices, the company aims to transform the infrastructure landscape by delivering high-quality projects that cater to the needs of modern society.</p>
+          <p class="mt-3 text-slate-700">By prioritizing eco-friendly designs and utilizing cutting-edge technology, Ram Lalla Developers strives to build not only structures but also communities that foster growth, inclusivity, and prosperity. Their dedication to excellence and community welfare positions them as a key player in shaping a more progressive and sustainable future for the country.</p>
+        </div>
+      </div>
+
+      <!-- Vastu Compliance Section -->
+      <div id="vastu" class="content-section">
+        <div class="bg-white rounded-lg p-6 shadow-soft mb-6">
+          <h2 class="font-display text-2xl text-ink border-b-2 border-gold pb-2 inline-block">About Vastu Compliance</h2>
+          <p class="mt-4 text-slate-700">Ram Lalla Developers have garnered a reputation for their meticulous attention to Vastu compliance in their architectural designs. Vastu Shastra, an ancient Indian science of architecture, emphasizes harmony between nature and the built environment.</p>
+          <p class="mt-3 text-slate-700">By integrating these principles, Ram Lalla Developers ensure that their projects not only meet contemporary design standards but also promote positive energy and well-being for occupants. Their commitment to Vastu compliance involves careful consideration of spatial orientation, layout, and structural elements, ensuring that homes and commercial spaces foster prosperity, health, and happiness.</p>
+          <p class="mt-3 text-slate-700">This holistic approach not only appeals to traditional values but also enhances the overall appeal and functionality of the spaces they create.</p>
+        </div>
+      </div>
+
+      <!-- Modern Design Section -->
+      <div id="design" class="content-section">
+        <div class="bg-white rounded-lg p-6 shadow-soft mb-6">
+          <h2 class="font-display text-2xl text-ink border-b-2 border-gold pb-2 inline-block">About Modern Design</h2>
+          <p class="mt-4 text-slate-700">Ram Lalla Developers has carved a niche in the real estate market with their commitment to modern design principles. Their approach is characterized by a seamless blend of functionality and aesthetics, ensuring that each project not only meets contemporary needs but also enhances the living experience.</p>
+          <p class="mt-3 text-slate-700">By incorporating sustainable materials and innovative architectural techniques, Ram Lalla Developers create spaces that are both eco-friendly and visually striking. Their designs often feature open floor plans, large windows for natural light, and smart home technologies, catering to the evolving preferences of today's homeowners.</p>
+          <p class="mt-3 text-slate-700">With a focus on quality craftsmanship and attention to detail, Ram Lalla Developers continue to set benchmarks in the industry, delivering homes that embody modern elegance and practicality.</p>
+        </div>
+      </div>
+
+      <!-- Heritage Touch Section -->
+      <div id="heritage" class="content-section">
+        <div class="bg-white rounded-lg p-6 shadow-soft mb-6">
+          <h2 class="font-display text-2xl text-ink border-b-2 border-gold pb-2 inline-block">About Heritage Touch</h2>
+          <p class="mt-4 text-slate-700">Ram Lalla Developers' "Heritage Touch" project is a fascinating endeavor that seeks to blend modern living with cultural and historical richness. By integrating traditional architectural elements and design philosophies into contemporary spaces, this project aims to preserve and celebrate the cultural heritage of the region.</p>
+          <p class="mt-3 text-slate-700">The developers focus on using sustainable materials and techniques, ensuring that the structures not only honor the past but also contribute to a sustainable future. This approach appeals to those who value the charm of heritage aesthetics while enjoying the comforts and conveniences of modern living.</p>
+          <p class="mt-3 text-slate-700">Overall, "Heritage Touch" represents a thoughtful fusion of history and innovation, offering a unique living experience that respects and revitalizes cultural legacies.</p>
+        </div>
+      </div>
+
+      <!-- Timely Delivery Section -->
+      <div id="delivery" class="content-section">
+        <div class="bg-white rounded-lg p-6 shadow-soft mb-6">
+          <h2 class="font-display text-2xl text-ink border-b-2 border-gold pb-2 inline-block">About Timely Delivery</h2>
+          <p class="mt-4 text-slate-700">Ram Lalla Developers has built a reputation for its commitment to timely delivery, a critical factor that sets them apart in the competitive real estate industry. Meeting project deadlines not only reflects their operational efficiency but also builds trust and satisfaction among clients and investors.</p>
+          <p class="mt-3 text-slate-700">By employing meticulous project management strategies, leveraging modern construction technologies, and maintaining clear communication with all stakeholders, Ram Lalla Developers ensures that their projects are completed on schedule without compromising on quality.</p>
+          <p class="mt-3 text-slate-700">This reliability in delivering projects on time is a testament to their dedication to excellence and customer satisfaction.</p>
+        </div>
+      </div>
+
+      <!-- Legal Clarity Section -->
+      <div id="legal" class="content-section">
+        <div class="bg-white rounded-lg p-6 shadow-soft mb-6">
+          <h2 class="font-display text-2xl text-ink border-b-2 border-gold pb-2 inline-block">About Legal Clarity</h2>
+          <p class="mt-4 text-slate-700">Ram Lalla Developers, like any real estate development company, must navigate a complex web of legal considerations to ensure their projects are compliant and successful. Legal clarity in this context involves understanding and adhering to zoning laws, environmental regulations, building codes, and property rights.</p>
+          <p class="mt-3 text-slate-700">It also entails securing necessary permits and licenses, as well as drafting clear contracts with stakeholders such as contractors, buyers, and local authorities. Staying informed about changes in legislation and maintaining transparent communication with legal advisors are crucial steps in avoiding potential legal disputes and ensuring smooth operations.</p>
+          <p class="mt-3 text-slate-700">By prioritizing legal clarity, Ram Lalla Developers can protect their interests and maintain a strong reputation in the competitive real estate market.</p>
+        </div>
+      </div>
+
+      <!-- Why Choose Us Section -->
+      <div id="choose" class="content-section">
+        <div class="bg-white rounded-lg p-6 shadow-soft mb-6">
+          <h2 class="font-display text-2xl text-ink border-b-2 border-gold pb-2 inline-block">Why Choose Ram Lalla Developers</h2>
+          <p class="mt-4 text-slate-700">Choosing Ram Lalla Developers can be a wise decision for a variety of reasons. Firstly, they are known for their commitment to quality and attention to detail in every project they undertake. Whether it's residential, commercial, or mixed-use developments, they consistently deliver superior craftsmanship and innovative design.</p>
+          <p class="mt-3 text-slate-700">Moreover, their reputation is built on transparency and integrity, ensuring that clients are well-informed and involved throughout the construction process. Additionally, Ram Lalla Developers prioritize sustainability and incorporate eco-friendly practices and materials in their projects, reflecting a commitment to environmental responsibility.</p>
+          <p class="mt-3 text-slate-700">Their experienced team is dedicated to customer satisfaction, providing personalized service and support to meet the specific needs and preferences of every client. With a proven track record of success and a portfolio of diverse and successful projects, Ram Lalla Developers stand out as a reliable and trustworthy choice in the real estate industry.</p>
+        </div>
+      </div>
+
+      <!-- Quality Assurance Section -->
+      <div id="quality" class="content-section">
+        <div class="bg-white rounded-lg p-6 shadow-soft mb-6">
+          <h2 class="font-display text-2xl text-ink border-b-2 border-gold pb-2 inline-block">About Quality Assurance</h2>
+          <p class="mt-4 text-slate-700">Quality assurance (QA) in the context of Ram Lalla Developers, or any real estate development company, is a critical process that ensures the highest standards are maintained throughout the construction and delivery of projects. QA involves a systematic approach to evaluating and improving the construction process, materials, and final outcomes to meet or exceed customer expectations and regulatory requirements.</p>
+          <p class="mt-3 text-slate-700">For Ram Lalla Developers, this could mean implementing rigorous testing protocols, regular site inspections, and audits at various stages of development, from initial design to final construction. By focusing on quality assurance, the company can ensure that its projects are not only structurally sound but also aesthetically pleasing and environmentally sustainable, ultimately enhancing customer satisfaction and building a strong reputation in the real estate industry.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer content -->
+    <footer class="bg-beige-300 text-ink mt-6 border-t">
+      <div class="max-w-6xl mx-auto container-px py-8 lg:py-10 grid md:grid-cols-2 lg:grid-cols-4 gap-6 footer-grid">
+        <div class="md:col-span-2 lg:col-span-1">
+          <div class="flex items-center gap-2 mb-2">
+            <!-- Footer logo also replaced with JPG -->
+            <img src="https://placehold.co/32x32/e9dec9/1f2937?text=RLD" alt="Ram Lalla Developers Logo" class="w-8 h-8 rounded-full object-cover">
+            <div class="font-display text-lg">Ram Lalla Developers</div>
+          </div>
+          <p class="text-xs lg:text-sm text-slate-600 mt-2 lg:mt-3">Professional urban & infrastructure solutions for a resilient nation.</p>
+        </div>
+        <div>
+          <div class="font-semibold mb-2 text-sm lg:text-base">Quick Links</div>
+          <ul class="space-y-1 lg:space-y-2 text-xs lg:text-sm text-slate-700">
+            <li><a href="#company" class="nav-link" data-target="company">About Us</a></li>
+            <li><a href="#choose" class="nav-link" data-target="choose">Why Choose Us</a></li>
+            <li><a href="#quality" class="nav-link" data-target="quality">Quality</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="font-semibold mb-2 text-sm lg:text-base">Resources</div>
+          <ul class="space-y-1 lg:space-y-2 text-xs lg:text-sm text-slate-700">
+            <li><a href="#notices">Notices</a></li>
+            <li><a href="#tenders">Tenders</a></li>
+            <li><a href="#careers">Careers</a></li>
+            <li><a href="#grievance">Grievance</a></li>
+          </ul>
+        </div>
+        <div class="md:col-span-2 lg:col-span-1">
+          <div class="font-semibold mb-2 text-sm lg:text-base">Accessibility</div>
+          <div class="flex gap-2">
+            <button class="px-3 py-2 bg-amber-600 text-white rounded text-xs lg:text-sm">High Contrast</button>
+            <button class="px-3 py-2 bg-amber-600 text-white rounded text-xs lg:text-sm">A+</button>
+          </div>
+          <p class="text-xs text-slate-600 mt-3 lg:mt-4">
+            © <span id="year"></span> Ram Lalla Developers. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // Set year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Navigation functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const navLinks = document.querySelectorAll('.nav-link');
+      const contentSections = document.querySelectorAll('.content-section');
+      
+      // Function to show a specific section
+      function showSection(sectionId) {
+        // Hide all sections
+        contentSections.forEach(section => {
+          section.classList.remove('active');
+        });
+        
+        // Show the selected section
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+          targetSection.classList.add('active');
+        }
+        
+        // Update URL hash
+        window.location.hash = sectionId;
+      }
+      
+      // Add click event listeners to all navigation links
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const target = this.getAttribute('data-target');
+          showSection(target);
+          
+          // Close mobile menu if open
+          const mobileMenu = document.querySelector('.mobile-menu details');
+          if (mobileMenu && mobileMenu.open) {
+            mobileMenu.open = false;
+          }
+        });
+      });
+      
+      // Check URL hash on page load
+      if (window.location.hash) {
+        const targetId = window.location.hash.substring(1);
+        showSection(targetId);
+        
+        // Also update the active navigation item
+        const correspondingLink = document.querySelector(`.nav-link[data-target="${targetId}"]`);
+        if (correspondingLink) {
+          document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+          });
+          correspondingLink.classList.add('active');
+        }
+      } else {
+        // Default to showing the company section
+        showSection('company');
+      }
+      
+      // Enhanced translate functionality
+      const translateToggle = document.getElementById('translateToggle');
+      const translateDropdown = document.getElementById('translateDropdown');
+      
+      if (translateToggle && translateDropdown) {
+        // Toggle dropdown
+        translateToggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          translateDropdown.classList.toggle('show');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!translateToggle.contains(e.target) && !translateDropdown.contains(e.target)) {
+            translateDropdown.classList.remove('show');
+          }
+        });
+        
+        // Handle language selection
+        const translateOptions = document.querySelectorAll('.translate-option');
+        translateOptions.forEach(option => {
+          option.addEventListener('click', function() {
+            const lang = this.getAttribute('data-lang');
+            
+            // Change language using Google Translate
+            if (typeof google !== 'undefined' && google.translate && google.translate.TranslateElement) {
+              // Get the select element
+              const select = document.querySelector('.goog-te-combo');
+              if (select) {
+                // Find the option with the matching language
+                for (let i = 0; i < select.options.length; i++) {
+                  if (select.options[i].value === lang) {
+                    select.selectedIndex = i;
+                    select.dispatchEvent(new Event('change'));
+                    break;
+                  }
+                }
+              }
+            }
+            
+            // Close dropdown
+            translateDropdown.classList.remove('show');
+          });
+        });
+      }
+    });
+
+    // Google Translate integration
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en', 
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false,
+        includedLanguages: 'en,hi,bn,te,ta,mr,gu,kn,ml,pa,as,ne,or,ur'
+      }, 'google_translate_element');
+      
+      // Hide the default Google Translate branding
+      const googleBranding = document.querySelector('.goog-logo-link');
+      if (googleBranding) {
+        googleBranding.style.display = 'none';
+      }
+      
+      const googleText = document.querySelector('.goog-te-gadget');
+      if (googleText) {
+        googleText.style.color = 'transparent';
+      }
+    }
+
+    // Load Google Translate script
+    (function(){
+      var addScript = function() {
+        var script = document.createElement('script');
+        script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+        document.head.appendChild(script);
+      };
+      
+      // Wait for DOM to be fully loaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', addScript);
+      } else {
+        addScript();
+      }
+    })();
+  </script>
+
+</body>
+</html>
